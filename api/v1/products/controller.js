@@ -99,11 +99,17 @@ const deleteProduct = async (req, res) => {
       // console.log(err.message);
     }
   } catch (err) {
-    res.status(500).json({
-      isSuccess: false,
-      message: "product not deleted",
-      data: {},
-    });
+    if (err.name === "ValidationError" || err.code == "11000") {
+      res
+        .status(400)
+        .json({ isSuccess: false, message: `Err: ${err.message}`, data: {} });
+    } else {
+      res.status(500).json({
+        isSuccess: false,
+        message: "product not deleted",
+        data: {},
+      });
+    }
     console.log("-------------not deleted-------------");
     console.log(err.message);
   }
